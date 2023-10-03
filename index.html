@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="We demonstrate a plug-and-play method which outperforms the latest few-shot personalization alternatives of diffusion models.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi-Concept T2I-Zero: Tweaking Only The Text Embeddings and Nothing Else</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+  <script>
+    history.scrollRestoration = 'manual';
+  </script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Multi-Concept T2I-Zero: Tweaking Only The Text Embeddings and Nothing Else</h1>
+          <div class="is-size-5 publication-authors">
+              <a href="https://hazarapet.github.io" target="_blank">Hazarapet Tunanyan</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://ir1d.github.io/" target="_blank">Dejia Xu</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/shant-navasardyan-1302aa149/" target="_blank">Shant Navasardyan</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.ece.utexas.edu/people/faculty/atlas-wang" target="_blank">Zhangyang Wang</a><sup>1,3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.humphreyshi.com/" target="_blank">Humphrey Shi</a><sup>1,2</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Picsart AI Research (PAIR),</span>
+            <span class="author-block"><sup>2</sup>Georgia Tech,</span>
+            <span class="author-block"><sup>3</sup>UT Austin</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark" target="_blank">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <!-- Arxiv Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark" target="_blank">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark" target="_blank">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming Soon)</span>
+                </a>
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Intro -->
+<section class="hero intro">
+  <div class="container is-max-desktop">
+    <div class="hero-body center">
+      <p>
+        We present a novel task of zero-shot multi-concept text-to-image generation and outline an economical solution, 
+        <strong>bypassing the necessity for training or optimizing</strong> at each diffusion step. This involves
+        <strong>just tweaking the text embeddings</strong> employed in text-to-image diffusion models.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Intro -->
+
+
+<!-- Main Figure -->
+<section class="hero figure main-figure">
+  <div class="container is-max-desktop">
+    <div class="hero-body center">
+      <img src="./static/images/teaser.png" style="width: 100%"/>
+      <p>
+        <strong>Object Dominance</strong> and <strong>Non-Localized Contribution</strong> make multi-concept image synthesis particularly complex. 
+        As a result, existing image manipulation and personalization methods struggle with multiple concepts. 
+        Our proposed method addresses these issues and demonstrates its capabilities in <strong>text-to-image, image manipulation, 
+        and personalization</strong> for multiple concepts.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Main Figure -->
+
+<!-- Abstract -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Recent advances in text-to-image diffusion models have enabled the photorealistic generation of images from text prompts. 
+            Despite the great progress, existing models still struggle to generate compositional multi-concept images naturally, 
+            limiting their ability to visualize human imagination. While several recent works have attempted to address this issue, 
+            they either introduce additional training or adopt guidance at inference time. In this work, we consider a more
+            ambitious goal: <i>natural multi-concept generation using a pre-trained diffusion
+            model, and with almost no extra cost</i>. To achieve this goal, we identify the limitations in the text embeddings used for 
+            the pre-trained text-to-image diffusion models. Specifically, we observe concept dominance and non-localized contribution
+            that severely degrade multi-concept generation performance. We further design a minimal low-cost solution that overcomes 
+            the above issues by <strong>tweaking (not re-training)</strong> the text embeddings for more realistic multi-concept text-to-image generation. 
+            Our <strong>Correction by Similarities</strong> method tweaks the embedding of concepts by collecting semantic features from most similar 
+            tokens to localize the contribution. To avoid mixing features of concepts, we also apply <strong>Cross-Token
+            Non-Maximum Suppression</strong>, which excludes the overlap of contributions from different concepts. 
+            Experiments show that our approach outperforms previous methods in text-to-image, image manipulation, and personalization tasks, 
+            despite not introducing additional training or inference costs to the diffusion steps.
+          </p>
+        </div>
+      </div>
+    </div>
+</section>
+<!--/ Abstract -->
+
+<!-- Masks -->
+<section class="hero figure is-light is-small">
+  <div class="container center is-max-desktop">
+    <div class="hero-body">
+      <p>
+        The challenges of multi-concept image synthesis can be divided into the following parts: 
+        <strong>Object Dominance</strong> - <i>when some concepts dominate the generation process and others get neglected</i>. 
+        <strong>Non-Localized Contribution</strong> - <i>when all concepts are synthesized, but their respective embeddings contribution is not localized</i>.
+      </p>
+      <br/>
+      <img src="./static/images/masks.png"/>
+      
+      <p>
+        Cross-Attention visualization. In each group, from left to right, the cross-attention maps
+        correspond to the text tokens inside the prompt, followed by padding null tokens. <strong style="color: red">Red</strong> tokens are
+        marked with <strong style="color: red">red</strong> rectangles. <strong>Top</strong>: <i>Concept Dominance</i>, 
+        <strong>Bottom</strong>: <i>Non-Localized Contribution</i>.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Masks -->
+
+<!-- Algorithm 1 -->
+<section class="hero figure is-small">
+  <div class="container center is-max-desktop">
+    <div class="hero-body">
+      <h3 class="title is-3">Method</h3>
+      <h4 class="title is-4">Correction By Similarities (Algorithm 1)</h4>
+      <p>
+        We introduce a <strong>Corrections-by-Similarities</strong> approach to combat the non-localized contribution issue. 
+        Specifically, we find similar embeddings and combine them all by their similarity scores to replace the original embedding of a concept.
+      </p>
+      <br/>
+      <img src="./static/images/algorithm1.png"/>
+      
+      <p>
+        Where <span>\(\otimes\)</span> is the elementwise multiplication operation, <span>\( \Phi(S, \tau) \)</span>
+        is a function that thresholds <span>\(S\)</span> values with <span>\(\tau\)</span> parameter and normalizes them by <span>\(max(S)\)</span>,
+        <span>\(\Psi(c, \gamma) \in [0, 1]^{n}\)</span> is a windowing function with window size <span>\(\gamma\)</span> 
+        which excludes the contribution of tokens farther from the selected token <span>\(c\)</span>
+      </p>
+      <br/>
+      <img src="./static/images/algorithm1_results.png"/>
+      <p>
+        A comparison between <strong>Stable Diffusion</strong> and <strong>Algorithm 1</strong>. 
+        Masks are average crossattention maps of the concept highlighted in <strong style="color: red;">red</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Algorithm 1 -->
+
+<!-- Algorithm 2 -->
+<section class="hero figure">
+  <div class="container center is-max-desktop">
+    <div class="hero-body">
+      <h4 class="title is-4"> Cross-Token Non-Maximum Suppression (Algorithm 2)</h4>
+      <p>
+        <strong>Cross-Token Non-Maximum Suppression</strong> method minimizes the overlap of contributions of different concepts 
+        to avoid <strong>mixing their features</strong>. This technique also helps to <strong>retain the contribution</strong> of neglected tokens 
+        in the first stages of the diffusion process, which leads to the proper generation of all concepts.
+      </p>
+
+      <br/>
+      <img src="./static/images/algorithm2.png"/>
+
+      <p>
+        Where <span>\(G(A)\)</span> is a Gaussian smoothing operator with kernel size <span>\(\kappa = 3\)</span> and <span>\(\sigma = 1\)</span>,
+        <span>\(O(M)\)</span> is a suppression function, such as one-hot vector operator with size <span>\(t, \otimes\)</span> is element-wise product operator.
+      </p>
+      <br/>
+
+      <img src="./static/images/algorithm2_results.png"/>
+      <p>
+        A comparison between <strong>Stable Diffusion</strong> and <strong>Algorithm 2</strong>. 
+        Masks are average crossattention maps of the concept highlighted in <strong style="color: red;">red</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Algorithm 2 -->
+
+<!-- Results -->
+<section class="hero figure is-light is-small">
+  <div class="container center is-max-desktop">
+    <div class="hero-body">
+      <h3 class="title is-3">Results</h3>
+      <h4 class="title is-4">Multi-Concept Image Manipulation</h4>
+
+      <img src="./static/images/manipulations.png"/>
+      <p>
+        Image manipulation results with our proposed <strong>Algorithm 1</strong> and <strong>Algorithm 2</strong>.
+        The manipulated concept highlighted in <strong style="color: red;">red</strong> in the prompt.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Results -->
+
+<!-- Manipulation Comparison -->
+<section class="hero">
+  <div class="container center is-max-desktop">
+    <div class="hero-body">
+      <!-- <h4 class="title is-4">Multi-Concept Image Manipulation</h4> -->
+      <img src="./static/images/manipulation_comparison.png"/>
+      <p style="padding-left: 3.6rem;">
+        A Comparison on image editing against <strong>Prompt2Prompt</strong> and <strong>Instruct Pix2Pix</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Manipulation Comparison -->
+
+<!-- Personalization Comparison -->
+<section class="hero figure is-light is-small">
+  <div class="container center is-max-desktop">
+    <div class="hero-body">
+      <h4 class="title is-4">Multi-Concept Personalization</h4>
+
+      <img src="./static/images/personalization_comparison.png"/>
+
+      <p style="padding-left: 3.6rem;">
+        A comparison of personalization results between <strong>Custom Diffusion</strong> and <strong>Ours</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+<!--/ Personalization Comparison -->
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <p>If you find our work useful, please cite our paper:</p>
+    <pre>
+      <code>@article{Specialist-Diffusion,
+        author    = {Lu, Haoming and Tunanyan, Hazarapet and Wang, Kai and Navasardyan, Shant and Wang, Zhangyang and Shi, Humphrey},
+        title     = {Specialist Diffusion: Plug-and-Play Sample-Efficient Fine-Tuning of Text-to-Image Diffusion Models to Learn Any Unseen Style},
+        journal   = {CVPR},
+        year      = {2023},
+      }</code>
+    </pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
